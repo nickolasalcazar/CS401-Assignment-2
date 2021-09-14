@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class DVDCollection {
 
@@ -21,6 +22,8 @@ public class DVDCollection {
 	/** Boolean flag to indicate whether the DVD collection was
 	    modified since it was last saved. */
 	private boolean modified;
+
+	private String[] ratings = {"G", "PG", "PG-13", "R", "NC-17"};
 	
 	/**
 	 *  Constructs an empty directory as an array
@@ -47,16 +50,54 @@ public class DVDCollection {
 
 	// TODO
 	/**
+	 * Given the title, rating and running time of a DVD, add this DVD to the 
+	 * collection if the title is not present in the DVD collection, or modify 
+	 * the DVD's rating and running time if the title is present in the collection. 
+	 * 
+	 * Do this operation only if the rating and running time are valid. If a new DVD 
+	 * is added to this collection, insert the DVD so that all DVDs are in alphabetical 
+	 * order by title. (NOTE: The collection should already be in alphabetical order 
+	 * when this method is called since this is the only method available to insert DVDs.) 
+	 */
+	public void addOrModifyDVD(String title, String rating, String runningTime) {
+		// Check if runningTime valid
+		int runningTimeInt;
+		try { runningTimeInt = Integer.parseInt(runningTime); }
+		catch(NumberFormatException ex) { return; }
+
+		if (!isRatingValid(rating)) return;
+		
+		// Search for title in dvdArray
+		boolean foundFlag = false;
+		for (int i = 0; i < dvdArray.length; i++) {
+			if (dvdArray[i].equals(title)) {
+				dvdArray[i].setRating(rating);
+				dvdArray[i].setRunningTime(runningTimeInt);
+				modified = true;
+				foundFlag = true;
+			}
+		}
+		// If title not found, create new DVD object in dvdArray
+		if (!foundFlag) {
+			// If dvdArray full, double its length
+			if (dvdArray.length == numdvds) {
+				dvdArray = Arrays.copyOf(dvdArray, dvdArray.length * 2);
+			}
+			dvdArray[numdvds] = new DVD(title, rating, runningTimeInt);
+			numdvds++;
+			modified = true;
+		}
+	}
+	
+	// TODO
+	/**
 	 * Given the title, this method should remove the DVD with this title from the
 	 * collection if present. The title must match exactly (in uppercase). 
 	 * If no title matches, do not change the collection.
 	 * 
 	 */
-	public void addOrModifyDVD(String title, String rating, String runningTime) {
-		// NOTE: Be careful. Running time is a string here
-		// since the user might enter non-digits when prompted.
-		// If the array is full and a new DVD needs to be added,
-		// double the size of the array first.
+	public void removeDVD(String title) {
+		
 	}
 	
 	// TODO
@@ -65,21 +106,16 @@ public class DVDCollection {
 	 * match the given rating in the order that they appear in the collection,
 	 * separated by newlines.
 	 */
-	public void removeDVD(String title) {
-		
-	}
-	
-	// TODO
-	/*
-	 * This method should return the total running time of all DVDs in the collection.
-	 * If there are no DVDs in the collection, return 0.
-	 */
 	public String getDVDsByRating(String rating) {
 
 		return null;	// STUB: Remove this line.
 	}
 
 	// TODO
+	/*
+	 * This method should return the total running time of all DVDs in the collection.
+	 * If there are no DVDs in the collection, return 0.
+	 */
 	public int getTotalRunningTime() {
 
 		return 0;	// STUB: Remove this line.
@@ -96,7 +132,6 @@ public class DVDCollection {
 	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
-		/** Scanner object for reading data at file located at sourceName */
 		Scanner scanner = new Scanner(sourceName);
 		scanner.useDelimiter(",");
 
@@ -105,13 +140,13 @@ public class DVDCollection {
 		int runningTime;
 
 		while(scanner.hasNext()) {
-			System.out.println(scanner.next()); // Store title
+			title = scanner.next();
 
 			if (!scanner.hasNext()) break;
-			System.out.println(scanner.next()); // Store rating
+			rating = scanner.next();
 
-			if (!scanner.hasNextInt()) break;
-			System.out.println(scanner.nextInt()); // Store runningTime
+			if (!scanner.hasNextInt() /*|| !isRatingValid(rating)*/) break;
+			runningTime = scanner.nextInt();
 
 			// All checks passed, add data to dvdArray
 			//addOrModifyDVD(title, rating, runningTime);
@@ -128,4 +163,12 @@ public class DVDCollection {
 	}
 
 	// Additional private helper methods go here:
+
+	// Returns true if rating is formatted correctly, false if otherwise
+	private boolean isRatingValid(String rating) {
+		for (int i = 0; i < ratings.length; i++) {
+			if (ratings[i].equals(rating)) return true;
+		}
+		return false;
+	}
 }
