@@ -1,6 +1,9 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class DVDCollection {
+
+
 
 	// Data fields
 	
@@ -11,6 +14,8 @@ public class DVDCollection {
 	private DVD[] dvdArray;
 	
 	/** The name of the data file that contains dvd data */
+	// Note: this might be redundant because loadData accepts
+	// 		 filename as a parameter
 	private String sourceName;
 	
 	/** Boolean flag to indicate whether the DVD collection was
@@ -91,10 +96,33 @@ public class DVDCollection {
 	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
+		/** Scanner object for reading data at file located at sourceName */
+		Scanner scanner = new Scanner(sourceName);
+		scanner.useDelimiter(",");
 
+		String title = new String();
+		String rating = new String();
+		int runningTime;
+
+		while(scanner.hasNext()) {
+			System.out.println(scanner.next()); // Store title
+
+			if (!scanner.hasNext()) break;
+			System.out.println(scanner.next()); // Store rating
+
+			if (!scanner.hasNextInt()) break;
+			System.out.println(scanner.nextInt()); // Store runningTime
+
+			// All checks passed, add data to dvdArray
+			//addOrModifyDVD(title, rating, runningTime);
+		}
 	}
 	
 	// TODO
+	/*
+	 * Save the DVDs currently in the array into the same file specified during 
+	 * the load operation, overwriting whatever data was originally there.
+	 */
 	public void save() {
 
 	}
