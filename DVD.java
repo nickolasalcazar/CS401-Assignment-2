@@ -9,64 +9,36 @@ public class DVD {
 	public DVD(String dvdTitle, String dvdRating, int dvdRunningTime) 
 	{
 
-
-	
 	}
 	
 	public String getTitle() 
 	{
-
-
-
-		return null;	// STUB: Remove this line.
+		return title;
 	}
 	
 	public String getRating() 
 	{
-
-
-
-		return null;	// STUB: Remove this line.
+		return rating;
 	}
 	
 	public int getRunningTime() 
 	{
-
-
-
-		return 0;	// STUB: Remove this line.
+		return runningTime;
 	}
 
 	public void setTitle(String newTitle) {
-
-
-
-
 
 	}
 
 	public void setRating(String newRating) {
 
-
-
-
-
 	}
 
 	public void setRunningTime(int newRunningTime) {
 
-
-
-
-
 	}
 
 	public String toString() {
-
-
-
 		return null;	// STUB: Remove this line.
-	}
-	
-	
+	}	
 }
