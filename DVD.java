@@ -8,7 +8,9 @@ public class DVD {
 
 	public DVD(String dvdTitle, String dvdRating, int dvdRunningTime) 
 	{
-
+		title = dvdTitle;
+		rating = dvdRating;
+		runningTime = dvdRunningTime;
 	}
 	
 	public String getTitle() 
@@ -27,18 +29,18 @@ public class DVD {
 	}
 
 	public void setTitle(String newTitle) {
-
+		title = newTitle;
 	}
 
 	public void setRating(String newRating) {
-
+		rating = newRating;
 	}
 
 	public void setRunningTime(int newRunningTime) {
-
+		runningTime = newRunningTime;
 	}
 
 	public String toString() {
-		return null;	// STUB: Remove this line.
+		return title + " " + rating + " " + runningTime;
 	}	
 }
