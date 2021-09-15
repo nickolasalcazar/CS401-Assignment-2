@@ -92,15 +92,33 @@ public class DVDCollection {
 		}
 	}
 	
-	// TODO
-	/**
+	// NOT FULLY TESTED
+	/*
 	 * Given the title, this method should remove the DVD with this title from the
 	 * collection if present. The title must match exactly (in uppercase). 
-	 * If no title matches, do not change the collection.
-	 * 
+	 * If no title matches, do not change the collection. 
 	 */
 	public void removeDVD(String title) {
-		
+		title = title.toUpperCase();
+		boolean titleFound = false;
+		// Determine if titleFound
+		for (int i = 0; i < numdvds; i++) {
+			if (dvdArray[i].getTitle().equals(title)) titleFound = true;
+		}
+		if (titleFound) {
+			DVD[] newDvdArray = new DVD[dvdArray.length];
+			for (int i = 0, j = 0; i < numdvds; i++, j++) {
+				if (dvdArray[i].getTitle().equals(title)) {
+					j--;
+					continue;
+				}
+				newDvdArray[j] = dvdArray[i];
+			}
+			dvdArray = newDvdArray;
+			newDvdArray = null;
+			modified = true;
+			numdvds--;
+		}
 	}
 	
 	// UNTESTED
@@ -110,7 +128,7 @@ public class DVDCollection {
 	 * separated by newlines.
 	 */
 	public String getDVDsByRating(String rating) {
-		if (!isRatingValid) return "";
+		if (!isRatingValid(rating)) return "";
 		String output = new String();
 		for (int i = 0; i < numdvds; i++) {
 			if (dvdArray[i].getRating().equals(rating)) {
@@ -131,7 +149,7 @@ public class DVDCollection {
 	public int getTotalRunningTime() {
 		if (numdvds == 0) return 0;
 		int total = 0;
-		for (i = 0; i < numdvds; i++) {
+		for (int i = 0; i < numdvds; i++) {
 			total += dvdArray[i].getRunningTime();
 		}
 		return total;
@@ -140,11 +158,6 @@ public class DVDCollection {
 	/*
 	 * Given a file name, this method should try to open this file and read
 	 * the DVD data contained inside to create an initial alphabetized DVD collection.
-	 *
-	 * HINT: Read each set of three values (title, rating, running time) and use the 
-	 * addOrModifyDVD method above to insert it into the collection. If the file cannot
-	 * be found, start with an empty array for your collection. If the data in the file
-	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
 		sourceName = filename;
@@ -205,6 +218,7 @@ public class DVDCollection {
 
 	// Returns true if rating is formatted correctly, false if otherwise
 	private boolean isRatingValid(String rating) {
+		rating = rating.toUpperCase();
 		for (int i = 0; i < ratings.length; i++) {
 			if (ratings[i].equals(rating)) return true;
 		}
