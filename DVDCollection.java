@@ -33,12 +33,13 @@ public class DVDCollection {
 	
 	public String toString() {
 		String output = String.format("numdvds = %d%ndvdArray.length = %d%n", 
-										numdvds, dvdArray.length);
+			numdvds, dvdArray.length);
+
 		for (int i = 0; i < numdvds; i++) {
 			output += String.format("dvdArray[%d] = %s/%s/%d%n", i, 
-										dvdArray[i].getTitle(), 
-										dvdArray[i].getRating(),
-										dvdArray[i].getRunningTime());
+				dvdArray[i].getTitle(), 
+				dvdArray[i].getRating(),
+				dvdArray[i].getRunningTime());
 		}
 		return output;
 	}
@@ -114,14 +115,17 @@ public class DVDCollection {
 		return null;	// STUB: Remove this line.
 	}
 
-	// TODO
 	/*
 	 * This method should return the total running time of all DVDs in the collection.
 	 * If there are no DVDs in the collection, return 0.
 	 */
 	public int getTotalRunningTime() {
-
-		return 0;	// STUB: Remove this line.
+		if (numdvds == 0) return 0;
+		int total = 0;
+		for (i = 0; i < numdvds; i++) {
+			total += dvdArray[i].getRunningTime();
+		}
+		return total;
 	}
 	
 	/*
@@ -177,9 +181,9 @@ public class DVDCollection {
 			String output = new String();
 			for (int i = 0; i < numdvds; i++) {
 				output += String.format("%s,%s,%d%n", 
-										dvdArray[i].getTitle(),
-										dvdArray[i].getRating(),
-										dvdArray[i].getRunningTime());
+					dvdArray[i].getTitle(),
+					dvdArray[i].getRating(),
+					dvdArray[i].getRunningTime());
 			}
 			byte[] bytesArray = output.getBytes();
 			fos.write(bytesArray);
