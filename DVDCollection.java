@@ -44,7 +44,6 @@ public class DVDCollection {
 		return output;
 	}
 
-	// TODO
 	/**
 	 * Given the title, rating and running time of a DVD, add this DVD to the 
 	 * collection if the title is not present in the DVD collection, or modify 
@@ -104,17 +103,27 @@ public class DVDCollection {
 		
 	}
 	
-	// TODO
+	// UNTESTED
 	/*
 	 * Given the rating, this method should return a string containing all DVDs that
 	 * match the given rating in the order that they appear in the collection,
 	 * separated by newlines.
 	 */
 	public String getDVDsByRating(String rating) {
-
-		return null;	// STUB: Remove this line.
+		if (!isRatingValid) return "";
+		String output = new String();
+		for (int i = 0; i < numdvds; i++) {
+			if (dvdArray[i].getRating().equals(rating)) {
+				output += String.format("%s,%s,%d%n", 
+					dvdArray[i].getTitle(),
+					dvdArray[i].getRating(),
+					dvdArray[i].getRunningTime());
+			}
+		}
+		return output;
 	}
 
+	// UNTESTED
 	/*
 	 * This method should return the total running time of all DVDs in the collection.
 	 * If there are no DVDs in the collection, return 0.
