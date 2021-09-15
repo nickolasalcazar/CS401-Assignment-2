@@ -12,8 +12,6 @@ public class DVDCollection {
 	private DVD[] dvdArray;
 	
 	/** The name of the data file that contains dvd data */
-	// Note: this might be redundant because loadData accepts
-	// 		 filename as a parameter
 	private String sourceName;
 	
 	/** Boolean flag to indicate whether the DVD collection was
@@ -136,7 +134,8 @@ public class DVDCollection {
 	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
-		File file = new File(filename);
+		sourceName = filename;
+		File file = new File(sourceName);
 		Scanner scanner;
 
 		try { scanner = new Scanner(file); }
@@ -164,13 +163,29 @@ public class DVDCollection {
 		}
 	}
 	
-	// TODO
 	/*
 	 * Save the DVDs currently in the array into the same file specified during 
 	 * the load operation, overwriting whatever data was originally there.
 	 */
 	public void save() {
+		try {
+			File file = new File(sourceName);
+	  		FileOutputStream fos = new FileOutputStream(file);
 
+			if (!file.exists()) file.createNewFile();
+
+			String output = new String();
+			for (int i = 0; i < numdvds; i++) {
+				output += String.format("%s,%s,%d%n", 
+										dvdArray[i].getTitle(),
+										dvdArray[i].getRating(),
+										dvdArray[i].getRunningTime());
+			}
+			byte[] bytesArray = output.getBytes();
+			fos.write(bytesArray);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) { e.printStackTrace(); }
 	}
 
 	// Additional private helper methods go here:
