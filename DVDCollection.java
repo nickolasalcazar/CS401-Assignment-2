@@ -126,7 +126,6 @@ public class DVDCollection {
 		return 0;	// STUB: Remove this line.
 	}
 	
-	// TODO
 	/*
 	 * Given a file name, this method should try to open this file and read
 	 * the DVD data contained inside to create an initial alphabetized DVD collection.
@@ -137,30 +136,28 @@ public class DVDCollection {
 	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
-		System.out.println("loadData() called");
+		File file = new File(filename);
+		Scanner scanner;
 
-		//String testInput = "ANGELS AND DEMONS,PG-13,138\nSTAR TREK,R,127\nUP,PG,96";
-
-		Scanner scanner = new Scanner(filename);
-		//Scanner scanner = new Scanner(testInput);
-		scanner.useDelimiter("[,\n\r]+"); // Regex delimiter: "," OR "\n"
+		try { scanner = new Scanner(file); }
+		catch (FileNotFoundException e) { return; }
 
 		String title = new String();
 		String rating = new String();
 		int runningTime;
 
-		while(scanner.hasNext()) {
-			title = scanner.next();
+		while(scanner.hasNextLine()) {
+			String[] csvArray = scanner.nextLine().split(",");
 
-			if (!scanner.hasNext()) break;
-			rating = scanner.next();
+			if (csvArray.length != 3) break; // Invalid CSV format
+	
+			title = csvArray[0];
 
-			if (!scanner.hasNextInt() || !isRatingValid(rating)) break;
-			runningTime = scanner.nextInt();
+			if (!isRatingValid(csvArray[1])) break; // Invalid rating
+			rating = csvArray[1];
 
-			System.out.println("** title = " + title);
-	        System.out.println("** rating = " + rating);
-	        System.out.println("** runningTime = " + runningTime);
+			try { runningTime = Integer.parseInt(csvArray[2]); }
+			catch(NumberFormatException ex) { break; } // Invalid runningTime
 
 			// All checks passed, add data to dvdArray
 			addOrModifyDVD(title, rating, String.valueOf(runningTime));
