@@ -3,9 +3,6 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class DVDCollection {
-
-
-
 	// Data fields
 	
 	/** The current number of DVDs in the array */
@@ -39,8 +36,8 @@ public class DVDCollection {
 	public String toString() {
 		String output = String.format("numdvds = %d%ndvdArray.length = %d%n", 
 										numdvds, dvdArray.length);
-		for (int i = 0; i < dvdArray.length; i++) {
-			output += String.format("dvdArray[%d] = %s/%s/%s%n", i, 
+		for (int i = 0; i < numdvds; i++) {
+			output += String.format("dvdArray[%d] = %s/%s/%d%n", i, 
 										dvdArray[i].getTitle(), 
 										dvdArray[i].getRating(),
 										dvdArray[i].getRunningTime());
@@ -60,25 +57,33 @@ public class DVDCollection {
 	 * when this method is called since this is the only method available to insert DVDs.) 
 	 */
 	public void addOrModifyDVD(String title, String rating, String runningTime) {
-		// Check if runningTime valid
+		// Check if runningTime is valid
 		int runningTimeInt;
-		try { runningTimeInt = Integer.parseInt(runningTime); }
-		catch(NumberFormatException ex) { return; }
+		try { 
+			runningTimeInt = Integer.parseInt(runningTime);
+		} catch(NumberFormatException ex) { 
+			System.out.println("ERROR: Invalid running time format");
+			return; 
+		}
 
-		if (!isRatingValid(rating)) return;
+		if (!isRatingValid(rating)) {
+			System.out.println("ERROR: Invalid rating format");
+			return;
+		}
 		
 		// Search for title in dvdArray
-		boolean foundFlag = false;
-		for (int i = 0; i < dvdArray.length; i++) {
+		boolean titleFound = false;
+		for (int i = 0; i < numdvds; i++) {
 			if (dvdArray[i].equals(title)) {
 				dvdArray[i].setRating(rating);
 				dvdArray[i].setRunningTime(runningTimeInt);
+				numdvds++;
 				modified = true;
-				foundFlag = true;
+				titleFound = true;
 			}
 		}
 		// If title not found, create new DVD object in dvdArray
-		if (!foundFlag) {
+		if (!titleFound) {
 			// If dvdArray full, double its length
 			if (dvdArray.length == numdvds) {
 				dvdArray = Arrays.copyOf(dvdArray, dvdArray.length * 2);
@@ -132,8 +137,13 @@ public class DVDCollection {
 	 * is corrupted, stop initializing the collection at the point of corruption.
 	 */
 	public void loadData(String filename) {
-		Scanner scanner = new Scanner(sourceName);
-		scanner.useDelimiter(",");
+		System.out.println("loadData() called");
+
+		//String testInput = "ANGELS AND DEMONS,PG-13,138\nSTAR TREK,R,127\nUP,PG,96";
+
+		Scanner scanner = new Scanner(filename);
+		//Scanner scanner = new Scanner(testInput);
+		scanner.useDelimiter("[,\n\r]+"); // Regex delimiter: "," OR "\n"
 
 		String title = new String();
 		String rating = new String();
@@ -145,11 +155,15 @@ public class DVDCollection {
 			if (!scanner.hasNext()) break;
 			rating = scanner.next();
 
-			if (!scanner.hasNextInt() /*|| !isRatingValid(rating)*/) break;
+			if (!scanner.hasNextInt() || !isRatingValid(rating)) break;
 			runningTime = scanner.nextInt();
 
+			System.out.println("** title = " + title);
+	        System.out.println("** rating = " + rating);
+	        System.out.println("** runningTime = " + runningTime);
+
 			// All checks passed, add data to dvdArray
-			//addOrModifyDVD(title, rating, runningTime);
+			addOrModifyDVD(title, rating, String.valueOf(runningTime));
 		}
 	}
 	
