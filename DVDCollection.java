@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public class DVDCollection {
 	// Data fields
-	
 	/** The current number of DVDs in the array */
 	private int numdvds;
 	
@@ -18,6 +17,7 @@ public class DVDCollection {
 	    modified since it was last saved. */
 	private boolean modified;
 
+	/** Array containing all possible ratings */
 	private String[] ratings = {"G", "PG", "PG-13", "R", "NC-17"};
 	
 	/**
@@ -48,11 +48,6 @@ public class DVDCollection {
 	 * Given the title, rating and running time of a DVD, add this DVD to the 
 	 * collection if the title is not present in the DVD collection, or modify 
 	 * the DVD's rating and running time if the title is present in the collection. 
-	 * 
-	 * Do this operation only if the rating and running time are valid. If a new DVD 
-	 * is added to this collection, insert the DVD so that all DVDs are in alphabetical 
-	 * order by title. (NOTE: The collection should already be in alphabetical order 
-	 * when this method is called since this is the only method available to insert DVDs.) 
 	 */
 	public void addOrModifyDVD(String title, String rating, String runningTime) {
 		// Check if runningTime is valid
@@ -68,7 +63,6 @@ public class DVDCollection {
 			System.out.println("ERROR: Invalid rating format");
 			return;
 		}
-		
 		// Search for title in dvdArray
 		boolean titleFound = false;
 		for (int i = 0; i < numdvds; i++) {
@@ -92,10 +86,9 @@ public class DVDCollection {
 		}
 	}
 	
-	// NOT FULLY TESTED
-	/*
-	 * Given the title, this method should remove the DVD with this title from the
-	 * collection if present. The title must match exactly (in uppercase). 
+	/**
+	 * Given the title, this method should remove the DVD with this title from 
+	 * the collection if present. The title must match exactly (in uppercase). 
 	 * If no title matches, do not change the collection. 
 	 */
 	public void removeDVD(String title) {
@@ -121,11 +114,10 @@ public class DVDCollection {
 		}
 	}
 	
-	// UNTESTED
-	/*
-	 * Given the rating, this method should return a string containing all DVDs that
-	 * match the given rating in the order that they appear in the collection,
-	 * separated by newlines.
+	/**
+	 * Given the rating, this method should return a string containing all DVDs
+	 * that match the given rating in the order that they appear in the 
+	 * collection, separated by newlines.
 	 */
 	public String getDVDsByRating(String rating) {
 		if (!isRatingValid(rating)) return "";
@@ -141,10 +133,9 @@ public class DVDCollection {
 		return output;
 	}
 
-	// UNTESTED
-	/*
-	 * This method should return the total running time of all DVDs in the collection.
-	 * If there are no DVDs in the collection, return 0.
+	/**
+	 * This method should return the total running time of all DVDs in the
+	 * collection. If there are no DVDs in the collection, return 0.
 	 */
 	public int getTotalRunningTime() {
 		if (numdvds == 0) return 0;
@@ -155,7 +146,7 @@ public class DVDCollection {
 		return total;
 	}
 	
-	/*
+	/**
 	 * Given a file name, this method should try to open this file and read
 	 * the DVD data contained inside to create an initial alphabetized DVD collection.
 	 */
@@ -189,7 +180,7 @@ public class DVDCollection {
 		}
 	}
 	
-	/*
+	/**
 	 * Save the DVDs currently in the array into the same file specified during 
 	 * the load operation, overwriting whatever data was originally there.
 	 */
@@ -214,9 +205,9 @@ public class DVDCollection {
 		} catch (IOException e) { e.printStackTrace(); }
 	}
 
-	// Additional private helper methods go here:
-
-	// Returns true if rating is formatted correctly, false if otherwise
+	/**
+	 * Returns true if rating is formatted correctly, false if otherwise
+	 */
 	private boolean isRatingValid(String rating) {
 		rating = rating.toUpperCase();
 		for (int i = 0; i < ratings.length; i++) {
