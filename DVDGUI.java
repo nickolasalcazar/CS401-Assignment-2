@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.event.*;    // New
+import java.awt.Dimension;  // New
 
 /**
  *  This class is an implementation of DVDUserInterface
@@ -6,6 +8,7 @@ import javax.swing.*;
  */
 public class DVDGUI implements DVDUserInterface {
   private DVDCollection dvdlist;
+  private JList movies;
    
   public DVDGUI(DVDCollection dl) { dvdlist = dl; }
    
@@ -17,28 +20,49 @@ public class DVDGUI implements DVDUserInterface {
                           "Exit and Save"
                         };
     int choice;
-     
-    do {  
-          choice = JOptionPane.showOptionDialog(null,
-          "Select a command", 
-          "DVD Collection", 
-          JOptionPane.YES_NO_CANCEL_OPTION, 
-          JOptionPane.QUESTION_MESSAGE, 
-          null, 
-          commands,
-          commands[commands.length - 1]);
-     
-        switch (choice) {
-          case 0: doAddOrModifyDVD(); break;
-          case 1: doRemoveDVD(); break;
-          case 2: doGetDVDsByRating(); break;
-          case 3: doGetTotalRunningTime(); break;
-          case 4: doSave(); break;
-          default:  // do nothing
-        } 
-     } while (choice != commands.length-1);
-     System.exit(0);
-   }
+    /*
+    do {
+      choice = JOptionPane.showOptionDialog(null,
+        "Select a command", 
+        "DVD Collection", 
+        JOptionPane.YES_NO_CANCEL_OPTION, 
+        JOptionPane.QUESTION_MESSAGE, 
+        null, 
+        commands,
+        commands[commands.length - 1]);
+   
+      switch (choice) {
+        case 0: doAddOrModifyDVD(); break;
+        case 1: doRemoveDVD(); break;
+        case 2: doGetDVDsByRating(); break;
+        case 3: doGetTotalRunningTime(); break;
+        case 4: doSave(); break;
+        default:  // do nothing
+      } 
+    } while (choice != commands.length-1);
+    System.exit(0);
+    */
+
+    new GUI();
+
+  }
+
+  /**
+   * JFrame
+   */
+  private class GUI extends JFrame {
+    public GUI() {
+      this.setSize(400, 400);
+      this.setLocationRelativeTo(null);
+      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.setTitle("Random Layout");
+
+
+
+
+      this.setVisible(true);
+    }
+  }
 
   private void doAddOrModifyDVD() {
     // Request the title
@@ -90,7 +114,6 @@ public class DVDGUI implements DVDUserInterface {
     String results = dvdlist.getDVDsByRating(rating);
     System.out.println("DVDs with rating " + rating);
     System.out.println(results);
-
   }
 
   private void doGetTotalRunningTime() {     
