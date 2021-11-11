@@ -3,7 +3,6 @@ import java.util.*;
 /**
  * 	Program to display and modify a simple DVD collection
  */
-
 public class DVDManager {
 
 	public static void main(String[] args) {
@@ -11,6 +10,7 @@ public class DVDManager {
 		DVDUserInterface dlInterface;
 		DVDCollection dl = new DVDCollection();
 
+		/*
 		Scanner scan = new Scanner(System.in);
 
 		System.out.println("Enter name of data file to load:");
@@ -29,6 +29,12 @@ public class DVDManager {
 			System.out.println("Unrecognized interface type. Program exiting.");
 			System.exit(0);
 		}
+		*/
+
+		dl.loadData("dvddata.txt");	// TESTING
+
+		dlInterface = new DVDGUI(dl);
+		dlInterface.processCommands();
 		
 	}
 
