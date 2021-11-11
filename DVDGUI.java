@@ -1,16 +1,22 @@
 import javax.swing.*;
 import java.awt.event.*;    // New
 import java.awt.Dimension;  // New
+import java.io.File;
+//import java.io.FileNameExtensionFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 /**
  *  This class is an implementation of DVDUserInterface
  *  that uses JOptionPane to display the menu of command choices. 
  */
 public class DVDGUI implements DVDUserInterface {
+  private String filename;
   private DVDCollection dvdlist;
-  private JList movies;
+  private JList dvdJList;
    
-  public DVDGUI(DVDCollection dl) { dvdlist = dl; }
+  //public DVDGUI(DVDCollection dl) { dvdlist = dl; }
+  public DVDGUI() { }
    
   public void processCommands() {
     String[] commands = { "Add/Modify DVD",
@@ -42,9 +48,7 @@ public class DVDGUI implements DVDUserInterface {
     } while (choice != commands.length-1);
     System.exit(0);
     */
-
     new GUI();
-
   }
 
   /**
@@ -57,9 +61,66 @@ public class DVDGUI implements DVDUserInterface {
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setTitle("Random Layout");
 
+      // Main panel
+      JPanel panel = new JPanel();
+
+      // Ask for filename
+      //filename = JOptionPane.showInputDialog("Enter DVD file path"); COMMENTED FOR DEBUGGING
+      JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+      FileNameExtensionFilter filter = new FileNameExtensionFilter("txt", "TXT");
+      chooser.setDialogTitle("Select DVD file");
+      chooser.setFileFilter(filter);
+      String filename = "";
+      if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+          filename = chooser.getSelectedFile().toString();
+      }
+      if (filename == "") System.exit(0);
+      panel.add(chooser);
+
+      DVDCollection dl = new DVDCollection();
+      // Load file
+      dl.loadData(filename);
+
+      // GridBagLayout
+      // Contains infinite rows, and x number of columns for movie options
+      
+      // Each row represents a movie
+
+      // Place GridBigLayout in JScrollPane
+      //JScrollPane scroll = new JScrollPane(/*  */);
 
 
 
+      Box movieContainer = Box.createHorizontalBox();
+
+      JButton button1 = new JButton("Button 1");
+      JButton button2 = new JButton("Button 2");
+      JButton button3 = new JButton("Button 3");
+      JButton button4 = new JButton("Button 4");
+      JButton button5 = new JButton("Button 5");
+
+      movieContainer.add(button1);
+      movieContainer.add(button2);
+      movieContainer.add(button3);
+      movieContainer.add(button4);
+
+      /*
+      // Creating a List Box
+      dvdJList = new JList(dvdlist);
+
+      // Define the height of each cell
+      dvdJList.setFixedCellHeight(30);
+      
+      // Define the width of each cell
+      dvdJList.setFixedCellWidth(150);
+
+      // Add JList to panel
+      panel.add(dvdJList);
+      */
+
+      this.add(movieContainer);
+
+      //this.add(panel);
       this.setVisible(true);
     }
   }
