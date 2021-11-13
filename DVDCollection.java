@@ -77,10 +77,9 @@ public class DVDCollection {
 		// Search for title in dvdArray
 		boolean titleFound = false;
 		for (int i = 0; i < numdvds; i++) {
-			if (dvdArray[i].equals(title)) {
+			if (dvdArray[i].getTitle().equals(title)) {
 				dvdArray[i].setRating(rating);
 				dvdArray[i].setRunningTime(runningTimeInt);
-				numdvds++;
 				modified = true;
 				titleFound = true;
 			}
