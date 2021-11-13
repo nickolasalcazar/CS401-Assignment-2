@@ -32,6 +32,11 @@ public class DVDCollection {
 	}
 
 	/**
+	 * @return Number of DVDs store in dvdArray
+	 */
+	public int getNumDvds() { return numdvds; }
+
+	/**
 	 * @throws ArrayIndexOutOfBoundsException
 	 * @return DVD stored at index i in dvdArray
 	 */
