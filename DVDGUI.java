@@ -36,7 +36,7 @@ public class DVDGUI implements DVDUserInterface {
    */
   private class GUI extends JFrame {
     public GUI() {
-      this.setSize(800, 200);
+      this.setSize(800, 300);
       this.setLocationRelativeTo(null);
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setTitle("DVD Manager");
@@ -128,7 +128,7 @@ public class DVDGUI implements DVDUserInterface {
 
         // BufferedImage img
         try {
-          BufferedImage img = ImageIO.read(new File("/Users/nickolasalcazar/Desktop/movie_default.png"));
+          BufferedImage img = ImageIO.read(new File("movie_default.png"));
           panel.add(new JLabel(new ImageIcon(img)), gridConstraints);
         } catch (IOException e) {
           panel.add(new JLabel("Image Error"));
