@@ -1,10 +1,17 @@
 import javax.swing.*;
-import java.awt.event.*;    // New
-import java.awt.Dimension;  // New
-import java.io.File;
-//import java.io.FileNameExtensionFilter;
+import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *  This class is an implementation of DVDUserInterface
@@ -14,113 +21,130 @@ public class DVDGUI implements DVDUserInterface {
   private String filename;
   private DVDCollection dvdlist;
   private JList dvdJList;
-   
-  //public DVDGUI(DVDCollection dl) { dvdlist = dl; }
+
+  private JButton addMovieBtn;
+  private JButton saveBtn;
+  private JButton exitBtn;
+  private JButton rmvBtn;
+
   public DVDGUI() { }
    
-  public void processCommands() {
-    String[] commands = { "Add/Modify DVD",
-                          "Remove DVD",
-                          "Get DVDs By Rating",
-                          "Get Total Running Time",
-                          "Exit and Save"
-                        };
-    int choice;
-    /*
-    do {
-      choice = JOptionPane.showOptionDialog(null,
-        "Select a command", 
-        "DVD Collection", 
-        JOptionPane.YES_NO_CANCEL_OPTION, 
-        JOptionPane.QUESTION_MESSAGE, 
-        null, 
-        commands,
-        commands[commands.length - 1]);
-   
-      switch (choice) {
-        case 0: doAddOrModifyDVD(); break;
-        case 1: doRemoveDVD(); break;
-        case 2: doGetDVDsByRating(); break;
-        case 3: doGetTotalRunningTime(); break;
-        case 4: doSave(); break;
-        default:  // do nothing
-      } 
-    } while (choice != commands.length-1);
-    System.exit(0);
-    */
-    new GUI();
-  }
+  public void processCommands() { new GUI(); }
 
   /**
    * JFrame
    */
   private class GUI extends JFrame {
     public GUI() {
-      this.setSize(400, 400);
+      this.setSize(800, 200);
       this.setLocationRelativeTo(null);
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      this.setTitle("Random Layout");
+      this.setTitle("DVD Manager");
 
       // Main panel
       JPanel panel = new JPanel();
 
       // Ask for filename
-      //filename = JOptionPane.showInputDialog("Enter DVD file path"); COMMENTED FOR DEBUGGING
-      JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+      //filename = JOptionPane.showInputDialog("Enter DVD file path");
+      JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
       FileNameExtensionFilter filter = new FileNameExtensionFilter("txt", "TXT");
-      chooser.setDialogTitle("Select DVD file");
-      chooser.setFileFilter(filter);
+      fileChooser.setDialogTitle("Select DVD file");
+      fileChooser.setFileFilter(filter);
       String filename = "";
-      if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-          filename = chooser.getSelectedFile().toString();
+      if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        filename = fileChooser.getSelectedFile().toString();
       }
-      if (filename == "") System.exit(0);
-      panel.add(chooser);
+      if (filename == "") System.exit(0); // No file name chosen
 
-      DVDCollection dl = new DVDCollection();
-      // Load file
-      dl.loadData(filename);
+      // Define and load data into dvdlist
+      dvdlist = new DVDCollection();
+      dvdlist.loadData(filename);
 
       // GridBagLayout
-      // Contains infinite rows, and x number of columns for movie options
+      panel.setLayout(new GridBagLayout());
+      GridBagConstraints gridConstraints = new GridBagConstraints();
       
-      // Each row represents a movie
-
-      // Place GridBigLayout in JScrollPane
-      //JScrollPane scroll = new JScrollPane(/*  */);
-
-
-
-      Box movieContainer = Box.createHorizontalBox();
-
-      JButton button1 = new JButton("Button 1");
-      JButton button2 = new JButton("Button 2");
-      JButton button3 = new JButton("Button 3");
-      JButton button4 = new JButton("Button 4");
-      JButton button5 = new JButton("Button 5");
-
-      movieContainer.add(button1);
-      movieContainer.add(button2);
-      movieContainer.add(button3);
-      movieContainer.add(button4);
-
-      /*
-      // Creating a List Box
-      dvdJList = new JList(dvdlist);
-
-      // Define the height of each cell
-      dvdJList.setFixedCellHeight(30);
+      // Number of columns and rows occupied
+      gridConstraints.gridwidth = 1;
+      gridConstraints.gridheight = 1;
       
-      // Define the width of each cell
-      dvdJList.setFixedCellWidth(150);
+      gridConstraints.weightx = 50;
+      gridConstraints.weighty = 100;
+      
+      // Define padding top, left, bottom, right
+      gridConstraints.insets = new Insets(5,5,5,5);
 
-      // Add JList to panel
-      panel.add(dvdJList);
-      */
+      // Default width and height
+      gridConstraints.weightx = 50;
+      gridConstraints.weighty = 100;
+      
+      // Define padding top, left, bottom, right
+      gridConstraints.insets = new Insets(5,5,5,5);
 
-      this.add(movieContainer);
+      // Float EAST if component does not fill space
+      gridConstraints.anchor = GridBagConstraints.WEST;
 
-      //this.add(panel);
+      // Define ActionListener for all buttons
+      ListenForButton lForButton = new ListenForButton();
+
+      // Add Movie button
+      gridConstraints.gridy = 0;
+      gridConstraints.gridx = 1;
+      addMovieBtn = new JButton("Add / Modify");
+      addMovieBtn.addActionListener(lForButton);
+      gridConstraints.anchor = GridBagConstraints.EAST;
+      panel.add(addMovieBtn, gridConstraints);
+
+      gridConstraints.gridx = 2; // Col 5
+      rmvBtn = new JButton("Remove");
+      rmvBtn.addActionListener(lForButton);
+      gridConstraints.anchor = GridBagConstraints.WEST;
+      
+      panel.add(rmvBtn, gridConstraints);
+
+      // Save button
+      gridConstraints.gridx = 3;
+      saveBtn = new JButton("Save");
+      saveBtn.addActionListener(lForButton);
+      gridConstraints.anchor = GridBagConstraints.EAST;
+      panel.add(saveBtn, gridConstraints);
+
+      // Exit button
+      gridConstraints.gridx = 4;
+      exitBtn = new JButton("Quit");
+      exitBtn.addActionListener(lForButton);
+      gridConstraints.anchor = GridBagConstraints.WEST;
+      panel.add(exitBtn, gridConstraints);
+
+      // List of movies
+      // Row
+      for (int i=0; i<dvdlist.getNumDvds(); i++) {
+        DVD dvd = dvdlist.getDvd(i);
+        
+        gridConstraints.gridy = i+1; // Row
+  
+        gridConstraints.gridx = 1; // Col 4
+        gridConstraints.anchor = GridBagConstraints.EAST;
+
+        // BufferedImage img
+        try {
+          BufferedImage img = ImageIO.read(new File("/Users/nickolasalcazar/Desktop/movie_default.png"));
+          panel.add(new JLabel(new ImageIcon(img)), gridConstraints);
+        } catch (IOException e) {
+          panel.add(new JLabel("Image Error"));
+        }
+        gridConstraints.anchor = GridBagConstraints.WEST;
+
+        gridConstraints.gridx = 2; // Col 1
+        panel.add(new JLabel("Movie Name: " + dvd.getTitle()), gridConstraints);
+
+        gridConstraints.gridx = 3; // Col 2
+        panel.add(new JLabel("Running Time: " + dvd.getRunningTime()), gridConstraints);
+
+        gridConstraints.gridx = 4; // Col 3
+        panel.add(new JLabel("Rating: " + dvd.getRating()), gridConstraints);
+      }
+      this.add(panel);
       this.setVisible(true);
     }
   }
@@ -184,4 +208,16 @@ public class DVDGUI implements DVDUserInterface {
   }
 
   private void doSave() { dvdlist.save(); }
+
+  /**
+   * ActionListener for all buttons.
+   */
+  private class ListenForButton implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == addMovieBtn) doAddOrModifyDVD();
+      else if (e.getSource() == saveBtn) doSave();
+      else if (e.getSource() == rmvBtn) doRemoveDVD();
+      else System.exit(0);
+    }
+  }
 }

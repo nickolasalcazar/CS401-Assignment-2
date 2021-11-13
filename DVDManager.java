@@ -33,7 +33,8 @@ public class DVDManager {
 
 		dl.loadData("dvddata.txt");	// TESTING
 
-		dlInterface = new DVDGUI(dl);
+		//dlInterface = new DVDGUI(dl);
+		dlInterface = new DVDGUI();
 		dlInterface.processCommands();
 		
 	}
