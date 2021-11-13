@@ -30,6 +30,12 @@ public class DVDCollection {
 		numdvds = 0;
 		dvdArray = new DVD[7];
 	}
+
+	/**
+	 * @throws ArrayIndexOutOfBoundsException
+	 * @return DVD stored at index i in dvdArray
+	 */
+	public DVD getDvd(int i) { return dvdArray[i]; }
 	
 	public String toString() {
 		String output = String.format("numdvds = %d%ndvdArray.length = %d%n", 
